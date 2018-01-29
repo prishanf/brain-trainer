@@ -1,5 +1,6 @@
 package com.example.prishanf.braintrainer;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     int locationOfCorrectAnswer;
     int score = 0;
     int numberOfQuestions = 0;
+    MediaPlayer mPlayer ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
         setNextQuestion();
+        mPlayer = MediaPlayer.create(getApplicationContext(),R.raw.ding);
     }
 
     public void setNextQuestion(){
@@ -78,11 +81,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void chooseAnswer(View view){
 
+        if (mPlayer.isPlaying()) {
+            mPlayer.stop();
+            mPlayer.release();
+            mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.ding);
+        }
+
         if (Integer.toString(locationOfCorrectAnswer).equals(view.getTag().toString())) {
             resultTextView.setText("Correct!");
             score++;
         } else {
             resultTextView.setText("Wrong :(");
+            mPlayer.start();
+
+
         }
         numberOfQuestions++;
         scoreTextView.setText(Integer.toString(score)+"/"+Integer.toString(numberOfQuestions));
